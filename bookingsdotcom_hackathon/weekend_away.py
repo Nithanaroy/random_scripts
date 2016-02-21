@@ -44,91 +44,92 @@
 # """
 
 
-class MySet:
-    def __init__(self, v):
-        self.v = set([])  # all vertices the set
-        self.e = []  # all edges from Graph from the above set of vertices
-        self.add(v)
-
-    def add(self, v):
-        self.e.append((0, v, v))
-        self.v.add(v)
-
-    # def add(self, e):
-    #     self.e.append(e)
-    #     # index 0 of e is the length of the edge
-    #     self.v.add(e[1])
-    #     self.v.add(e[2])
-    #     return self  # for chaining of commands whoever is using this function
-
-    def exists(self, v):
-        return v in self.v
-
-    def extend(self, s):
-        """
-        Extend the current instance by s
-        :param s: instance of MySet
-        :return: None
-        """
-        self.e += s.e
-        self.v.union(s.v)
+def find(sets, v):
+    for i, s in enumerate(sets):
+        for e in s:
+            if v in e[1:]:
+                return i
 
 
-class MySetList:
-    def __init__(self):
-        self.s = []  # a list of MySet instances
-        self.v = set([])  # a list of all vertices in the list above
-
-    def add(self, s):
-        """
-        add element to list
-        :param s: instance of MySet
-        :return: index of this new instance in the list
-        """
-        self.s.append(s)
-        for v in s.v:
-            self.v.add(v)
-        return len(self.s) - 1
-
-    def merge(self, index1, index2):
-        self.s[index2].extend(self.s[index1])
-        self.s.pop(index1)
-        return index2
-
-    def edge_exists(self, e):
-        """
-        checks if any of the vertex of edge e is present in sets
-        :param e: [v1, v2] or (v1, v2)
-        :return: [i1, i2] -> list (last) indices of v1 and v2. i1 or i2 can be -1 if not found
-        """
-        res = [-1, -1]
-        if e[0] not in self.v and e[1] not in self.v:
-            return res
-
-        for i, aset in enumerate(self.s):
-            if aset.exists(e[0]):
-                res[0] = i
-            if aset.exists(e[1]):
-                res[1] = i
-        return res
-
-
-def minimal_distance(n, m, edges):
+def mst(n, edges):
     edges.sort()
-    sets = MySetList()  # list of MySet instances
+    sets = []
+
+    # every vertex is its own set
     for v in range(1, n + 1):
-        sets.add(MySet(v))
+        sets.append([(0, v, v)])
+
     for e in edges:
-        # sets.add(MySet(e))
-        v_indices = sets.edge_exists(e[1:])
-        if v_indices[0] != v_indices[1]:
+        i1 = find(sets, e[1])
+        i2 = find(sets, e[2])
+        if i1 != i2:
             # both vertices do not belong to the same set
-            sets.merge(v_indices[1], v_indices[0])
-    return [e[0] for e in sets.s[0].e]
+
+            # remove if vertex
+            if len(sets[i1]) == 1 and sets[i1][0][0] == 0:
+                sets[i1] = []
+            if len(sets[i2]) == 1 and sets[i2][0][0] == 0:
+                sets[i2] = []
+
+            sets[i1] += sets[i2]
+            sets[i1].append(e)
+
+            if len(sets[i1]) == n - 1:  # n-1 edges are enough to connect n vertices
+                return sets[i1]
+
+            sets.pop(i2)
 
 
-if __name__ == '__main__':
+def minimal_distance(me):
+    """
+    finds 2 minimal connected edges from MST edges, me
+    :param me: list of edges which form MST for the graph
+    :return: distance of the chosen edges
+    """
+    smallest_d = 101  # given length of edge <= 100
+    ismallest = -1  # index of the edge in the list, me
+    for i, e in enumerate(me):
+        if e[0] < smallest_d:
+            smallest_d = e[0]
+            ismallest = i
+
+    d = me[ismallest][0]
+    v1 = me[ismallest][1]
+    v2 = me[ismallest][2]
+    me.pop(ismallest)
+
+    smallest_d = 101
+    for i, e in enumerate(me):
+        if (e[1] == v1 or e[2] == v1 or e[1] == v2 or e[2] == v2) and e[0] < smallest_d:
+            smallest_d = e[0]
+
+    d += smallest_d
+    return d
+
+
+def run():
+    t = int(raw_input())  # number of test cases
+    while t > 0:
+        n, m = [int(i) for i in raw_input().split(" ")]
+        edge_list = []
+        while m > 0:
+            edge = [int(i) for i in raw_input().split()]
+            edge.reverse()  # so that distance comes to the first
+            edge_list.append(edge)
+            m -= 1
+        print minimal_distance(mst(n, edge_list))
+        t -= 1
+
+
+def test_input():
     n = 4
     m = 6
     edge_list = [(2, 1, 2), (4, 1, 3), (8, 1, 4), (3, 2, 3), (3, 2, 4), (1, 3, 4)]  # (distance, vertex1, vertex2)
-    print minimal_distance(n, m, edge_list)
+    print minimal_distance(mst(n, edge_list))
+
+
+if __name__ == '__main__':
+    run()
+
+# end result - works for a few cases. Mostly timeout or runtime error
+# find method is a good candidate for improving the time
