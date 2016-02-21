@@ -1,0 +1,43 @@
+<html>
+
+<head>
+    <title>Module Pattern</title>
+</head>
+
+<body>
+    <script type="text/javascript">
+    var counter = function(init) {
+        var val = init;
+
+        function changeBy(inc) {
+            val += inc;
+        }
+
+        return {
+            value: function() {
+            	return val;
+            },
+            increment: function() {
+                changeBy(1);
+            },
+            decrement: function() {
+                changeBy(-1);
+            }
+        }
+    };
+
+    var c1 = counter(1);
+    var c2 = counter(10);
+
+    console.log(c1.value());
+    console.log(c2.value());
+
+    c1.increment();
+    c2.decrement();
+
+    console.log(c1.value());
+    console.log(c2.value());
+    </script>
+</body>
+
+</html>

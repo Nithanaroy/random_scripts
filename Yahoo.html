@@ -1,0 +1,40 @@
+<html>
+
+<head>
+    <title>Yahoo!</title>
+    <script type="text/javascript">
+    function counter(x) {
+        function changeBy(v) {
+            x += v;
+        }
+        return {
+            inc: function() {
+                changeBy(1);
+            },
+            dec: function() {
+                changeBy(-1);
+            },
+            val: function() {
+                return x;
+            }
+        }
+    }
+
+    var c10 = counter(10);
+    var c20 = counter(20);
+
+    console.log(c10.val());
+    console.log(c20.val());
+
+    c10.inc();
+    c20.dec();
+
+    console.log(c10.val());
+    console.log(c20.val());
+    </script>
+</head>
+
+<body>
+</body>
+
+</html>

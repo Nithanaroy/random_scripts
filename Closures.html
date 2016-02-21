@@ -1,0 +1,91 @@
+<html>
+
+<head>
+    <title>Playing with Closures in JavaScript</title>
+    <style type="text/css">
+    body {
+        font-size: 12px;
+    }
+    
+    h1 {
+        font-size: 1.5em;
+    }
+    
+    h2 {
+        font-size: 1.3em;
+    }
+    </style>
+</head>
+
+<body>
+    <div id='wrapper' style='margin: 20px;'>
+        <button id='original'>Original</button>
+        <button id='bigger'>Bigger</button>
+        <button id='smaller'>Smaller</button>
+        <h1>This is Heading 1</h1>
+        <h2>This is Heading 2</h2>
+        <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures" target='_blank'>Inspired from MDN Closures Page</a>
+    </div>
+    <!-- Example 1: Function factories -->
+    <script type="text/javascript">
+    function makeSize(x) {
+        return function() {
+            document.body.style.fontSize = x;
+        }
+    }
+
+    function incSize(x) {
+        return function() {
+            var fontSize = parseInt(window.getComputedStyle(document.body, null).getPropertyValue('font-size'));
+            document.body.style.fontSize = fontSize + x;
+        }
+    }
+    // makeSize, incSize are function factories
+    var bigger = incSize(2);
+    var smaller = incSize(-2);
+    var size12 = makeSize(12);
+
+    document.getElementById("original").onclick = size12;
+    document.getElementById("bigger").onclick = bigger;
+    document.getElementById("smaller").onclick = smaller;
+    </script>
+    <!-- Example 2: Private methods -->
+    <script type="text/javascript">
+    function Person(name, age, gender) {
+        this.name = name;
+        this.age = age;
+        this.gender = gender;
+
+        // Closure
+        this.toString = function() {
+            return name;
+        }
+    }
+
+    var nitin = new Person("Nitin Pasumarthy", 25, 'M');
+    var atasi = new Person("Atasi Panda", 25, "F");
+
+    console.log(nitin.toString());
+    console.log(atasi.toString());
+    </script>
+    <!-- Example 3: Better performance without closures whenever possible -->
+    <script type="text/javascript">
+    function myObject() {
+        this.x = 01;
+        this.y = 2;
+
+        // instead of creating simple get methods which do nothing other than returning the values as
+        // closures, we attach them to prototype
+    }
+    (function() {
+        this.getX = function() {
+            return this.x;
+        }
+    }).call(myObject.prototype);
+
+    var o = new myObject();
+    console.log(o.getX());
+    </script>
+</body>
+
+</html>
