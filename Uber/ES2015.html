@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>ES2015</title>
+
+  </head>
+  <body>
+    <article>
+      <p>1</p>
+      <p>2</p>
+    </article>
+    <article>
+      <p>a</p>
+      <p>b</p>
+    </article>
+    <script type="text/javascript">
+    'use strict';
+    var a = 'unused';
+
+    class Counter {
+      constructor(start = 0) {
+        this.val = start;
+      }
+      increment(inc = 1) {
+        this.val += inc;
+      }
+      decrement(dec = 1) {
+        this.val -= dec;
+      }
+      print() {
+        console.log(this.val);
+      }
+    }
+    let c = new Counter();
+    let c1 = new Counter(2);
+    c.increment();
+    c.increment();
+    c.print();
+    c1.decrement();
+    c1.print();
+
+    // var makeCounter = function(start = 0) {
+    //   let val = start;
+    //   function changeBy(i) {
+    //     val += i;
+    //   }
+    //   return {
+    //     increment: function(inc = 1) {
+    //       changeBy(inc);
+    //     },
+    //     decrement: function(dec = 1) {
+    //       changeBy(-dec);
+    //     },
+    //     print: function() {
+    //       console.log(val);
+    //     }
+    //   }
+    // }
+    // let c1 = makeCounter();
+    // let c2 = makeCounter(2);
+    // c1.increment();
+    // c1.increment();
+    // c1.print();
+    // c2.decrement();
+    // c2.print();
+
+    // var paras = document.querySelectorAll('p');
+    // for(let p of paras) {
+    //   console.log(p)
+    // }
+
+    // function *tableGen(i) {
+    //   let j = 1;
+    //   while(j < 11) {
+    //     yield i * j;
+    //     j++;
+    //   }
+    // }
+    // let twoTable = tableGen(2);
+    // for(let i of twoTable) {
+    //   console.log(i);
+    // }
+
+    // function named(a=10, {'b': 20, 'c': 30}) {
+    //   console.log(a,b,c);
+    // }
+    // named();
+
+    // a = [1,2,3].filter(function(e) {
+    //   return e % 2 === 0;
+    // });
+
+    // var a = [1,2,3].map(function(e) {
+    //   return e * 2;
+    // });
+
+    // function a(a, ...args) {
+    //   console.log(a);
+    //   console.log(args);
+    // }
+    // a(1, ...[2,3,4]);
+    // a(1, 2,3);
+    console.log(a);
+    </script>
+  </body>
+</html>
